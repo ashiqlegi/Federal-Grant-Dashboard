@@ -2,7 +2,7 @@ import sqlite3
 import os
 
 # The path to the DB.
-DB_PATH = os.path.join(os.path.dirname(__file__), '..''data', 'spending.db')
+DB_PATH = os.path.join(os.path.dirname(__file__), '..','data', 'spending.db')
 
 ##SQLite schema for tracking pipeline runs and storing award data.
 
@@ -29,7 +29,16 @@ CREATE TABLE IF NOT EXISTS pipeline_runs (
     award_amount REAL,
     start_date TEXT,
     end_date TEXT,
+    description TEXT,
     loaded_at TEXT NOT NULL,
+    FOREIGN KEY (run_id) REFERENCES pipeline_runs(id)
+    );
+    CREATE TABLE IF NOT EXISTS data_quality_log (
+    id      INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_id  INTEGER NOT NULL,
+    field   TEXT,
+    issue   TEXT,
+    count   INTEGER,
     FOREIGN KEY (run_id) REFERENCES pipeline_runs(id)
 );
 """
@@ -48,7 +57,7 @@ def init_db():
 
 #"Returns an open DB connection. Then call the .close() method on the connection when done."
 def get_conn():
-    return sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
