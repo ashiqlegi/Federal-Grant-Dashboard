@@ -97,34 +97,3 @@ def load_quality_flags(run_id, quality_flags):
     conn.commit()
     conn.close()
     print(f"Logged {len(quality_flags)} quality flags")
-if __name__ == "__main__":
-    import sys 
-    sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-    from etl.extract import extract_awards
-    from etl.transform import transform_awards
-import time
-
-start_time = time.time()
-
-    # Start the run and get an id
-run_id = start_run()
-
-    # Run extract and transform
-raw = extract_awards()
-cleaned, flags = transform_awards(raw)
-
-    # Load both into the database
-rows = load_awards(run_id, cleaned)
-load_quality_flags(run_id, flags)
-
-    # Mark the run as finished
-duration = time.time() - start_time
-finish_run(
-    run_id,
-    status="success",
-    rows_extracted=len(raw),
-    rows_loaded=rows,
-    quality_flags=len(flags),
-    duration_sec=duration
-)
-print(f"\nDone! Full pipeline completed in {round(duration, 2)} seconds")
