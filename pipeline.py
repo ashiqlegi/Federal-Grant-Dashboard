@@ -3,7 +3,7 @@ import os
 import time
 import logging
 
-# ── Logging setup ──────────────────────────────────────────────
+#  Logging setup
 # logging is Python's built-in way to record what your program does.
 # It's better than print() for three reasons:
 #   1. You can write to a file AND the terminal at the same time
@@ -25,14 +25,14 @@ logging.basicConfig(
 
 logger = logging.getLogger("pipeline")
 
-# ── Imports ────────────────────────────────────────────────────
+# Imports 
 from etl.database import init_db
 from etl.extract  import extract_awards
 from etl.transform import transform_awards
 from etl.load     import start_run, finish_run, load_awards, load_quality_flags
 
 
-# ── Main pipeline function ─────────────────────────────────────
+#  Main pipeline function 
 def run_pipeline():
     """
     Orchestrates the full ETL pipeline:
