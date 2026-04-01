@@ -5,11 +5,9 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from flask import Flask, render_template_string
 from etl.database import get_conn
 
-# Flask(__name__) creates the web application
+
 app = Flask(__name__)
 
-# ── SQL QUERIES ────────────────────────────────────────────────
-# These are the questions we ask our database to power the dashboard
 
 def get_pipeline_runs():
     """Get all pipeline runs, newest first."""
@@ -67,9 +65,6 @@ def get_summary_stats():
     return dict(stats)
 
 
-# ── ROUTES ─────────────────────────────────────────────────────
-# A route is a URL that Flask listens for.
-# When the browser visits that URL, Flask runs the function below it.
 
 @app.route("/")
 def dashboard():
@@ -80,9 +75,7 @@ def dashboard():
     return render_template_string(HTML, runs=runs, awards=awards, stats=stats)
 
 
-# ── HTML TEMPLATE ──────────────────────────────────────────────
-# render_template_string() lets us write HTML directly in Python.
-# The {{ }} syntax is how we inject Python variables into the HTML.
+
 
 HTML = """
 <!DOCTYPE html>
@@ -212,9 +205,7 @@ HTML = """
 </html>
 """
 
-# ── START THE SERVER ───────────────────────────────────────────
+# Starting the server
 if __name__ == "__main__":
-    # debug=True means Flask will auto-reload when you save changes
-    # Never use debug=True in production — only for development
     print("Dashboard running at http://localhost:5000")
     app.run(debug=True)
