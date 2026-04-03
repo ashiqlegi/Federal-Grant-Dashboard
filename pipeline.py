@@ -4,11 +4,6 @@ import time
 import logging
 
 #  Logging setup
-# logging is Python's built-in way to record what your program does.
-# It's better than print() for three reasons:
-#   1. You can write to a file AND the terminal at the same time
-#   2. Each message has a timestamp automatically
-#   3. You can set levels — INFO for normal, ERROR for problems
 
 os.makedirs("logs", exist_ok=True)
 
@@ -35,9 +30,6 @@ from etl.load     import start_run, finish_run, load_awards, load_quality_flags
 #  Main pipeline function 
 def run_pipeline():
     """
-    Orchestrates the full ETL pipeline:
-    Extract → Transform → Load
-
     Every run is recorded in pipeline_runs regardless of
     whether it succeeds or fails. This gives us a full
     audit trail of everything that ever happened.
@@ -47,8 +39,7 @@ def run_pipeline():
     logger.info("Pipeline starting")
 
     # Make sure the database and tables exist
-    # Safe to call every time — IF NOT EXISTS means it won't
-    # wipe anything if the tables are already there
+       # wipe anything if the tables are already there
     init_db()
 
     # Record the start of this run and get back a run_id
@@ -69,12 +60,12 @@ def run_pipeline():
         logger.info(f"Transformed {len(cleaned_records)} records")
         logger.info(f"Quality flags found: {len(quality_flags)}")
 
-        # ── LOAD ──────────────────────────────────────────────
+        #  LOAD 
         logger.info("Step 3/3 — Loading data into database")
         rows_loaded = load_awards(run_id, cleaned_records)
         load_quality_flags(run_id, quality_flags)
 
-        # ── FINISH ────────────────────────────────────────────
+        #  FINISH 
         duration = time.time() - start_time
         finish_run(
             run_id,
@@ -109,6 +100,6 @@ def run_pipeline():
         sys.exit(1)
 
 
-# ── Entry point ────────────────────────────────────────────────
+#  Entry point 
 if __name__ == "__main__":
     run_pipeline()
